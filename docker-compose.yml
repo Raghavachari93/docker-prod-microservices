@@ -1,0 +1,36 @@
+version: "3.9"
+
+services:
+  api:
+    build: ./api
+    restart: always
+    env_file:
+      - .env
+    depends_on:
+      - mongo
+
+  worker:
+    build: ./worker
+    restart: always
+    env_file:
+      - .env
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:6
+    restart: always
+    volumes:
+      - mongo-data:/data/db
+
+  nginx:
+    build: ./nginx
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+
+volumes:
+  mongo-data:
+
